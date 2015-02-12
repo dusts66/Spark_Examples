@@ -11,7 +11,7 @@ This repo is meant to provide a working VM and some code examples to learn Spark
 ####1. Git Clone the Spark_Examples Repo
     
 ```
-git clone http://code.livingsocial.net/DDavidson/Spark_Examples.git
+git clone https://github.com/dusts66/Spark_Examples.git
 ```
 
 
