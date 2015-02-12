@@ -9,7 +9,7 @@ from pyspark.sql import SQLContext
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print >> sys.stderr, "Usage: app <first HDFS file path> <second HDFS file path>"
+        print >> sys.stderr, "Usage: app <weight file path> <age file path>"
         exit(-1)
 
     #Giving a Name and using the local Spark Master
@@ -60,19 +60,19 @@ if __name__ == "__main__":
     people_weight = sql_Context.sql("SELECT name,weight FROM weight").collect()
     people_age = sql_Context.sql("SELECT name,age FROM age").collect()
 
+    
+    '''
+    	Creating a JOIN between the two tables
+    '''
+    join_people = sql_Context.sql("SELECT w.name, w.weight, a.age FROM weight w JOIN age a ON w.name = a.name").collect()
+
+
     for (name,weight) in people_weight:
         print "Name: %s, Weight: %s" % (name, str(weight))
 
     for (name,age) in people_age:
         print "Name: %s, Age: %s" % (name, str(age))
 
-    
-
-
-    '''
-    	Creating a JOIN between the two tables
-    '''
-    join_people = sql_Context.sql("SELECT w.name, w.weight, a.age FROM weight w JOIN age a ON w.name = a.name").collect()
-
     for (name,weight,age) in join_people:
         print "Name: %s Weight: %s Age: %s" % (name,str(weight),str(age))
+

@@ -1,0 +1,10 @@
+things-to-do,escapes
+things-to-do,products
+things-to-do,cities
+escapes,cities
+escapes,shop
+shop,products
+products,shop
+shop,products
+cities,escapes
+cities,escapes

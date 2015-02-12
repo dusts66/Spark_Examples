@@ -12,7 +12,7 @@ if __name__ == "__main__":
         exit(-1)
 
     #Giving a Name and using the local Spark Master
-    sc = SparkContext("local", "Python Filter Count App")
+    sc = SparkContext(appName="Python Filter Count App")
 
     lines = sc.textFile(sys.argv[1], 1)
 
@@ -32,5 +32,3 @@ if __name__ == "__main__":
     
     #Outputing the stdout
     print 'Lorem ipsum is in %s lines' % str(count)
-
-    sc.stop()

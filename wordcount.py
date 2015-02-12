@@ -61,6 +61,4 @@ if __name__ == "__main__":
 
 	#Option 2
 	#wc.saveAsTextFile("/testing/wc_out")
-    
-
-    sc.stop()
+	

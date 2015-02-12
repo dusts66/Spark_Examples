@@ -12,7 +12,7 @@ if __name__ == "__main__":
         exit(-1)
 
     #Giving a Name and using the local Spark Master
-    sc = SparkContext("local", "Python Sort Wordcount App")
+    sc = SparkContext(appName="Python Sort Wordcount App")
 
     lines = sc.textFile(sys.argv[1], 1)
 
