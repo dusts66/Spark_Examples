@@ -1,0 +1,1 @@
+LOAD DATA LOCAL INPATH 'deals_sample_data.tsv' INTO TABLE deals

@@ -1,88 +1,102 @@
-Spark Examples
-==============
+#Pyspark - KMeans
 
-This repo is meant to provide a working VM and some code examples to learn Spark.
+The following example uses KMeans clustering to produce geographic Lat/Long centers based on purchases.  Steps are outlined below to setup the local environment to run the example.  Check out the [Spark](http://spark.apache.org/) docs for the lastest functionality.
 
-
-
-## Instructions
+**Note:  using Spark 1.2.0 package with CDH 5.3**
 
 
-####1. Git Clone the Spark_Examples Repo
-    
+
+###Steps
+
+**The following directions assume you have a Spark environment up and running.  If not, go here [Spark VM](http://code.livingsocial.net/DDavidson/hadoop/tree/spark_vm).**
+
+
+###Setup Spark Environment
+1. I grabbed sample from the watson_bisum_deals to import into my Local Hive table.  I logged onto i75 and pulled the sample data into my home directory.  From there use rsync or scp to pull to your local machine.
+
+
+  A. Getting sample Data
+  
+  ```
+  hive -e 'select * from watson_bisum_deals limit 10000' > deals_sample_data.tsv
+  ```
+
+
+  B. Download the file
+
+  **Note:  Copying the file to the `/home/hadmin`directory inside the VM.** 
+  
+  ```
+  scp -3 {user name}@{server name}:{path to sample file} hadmin@hadoop-manager:/home/hadmin
+  ```
+
+
+2. I set up a local hive table to mimic a production table 'watson_bisum_deals'.  *Run from inside the VM*.  
+  
+
+  A. Use the create_watson_bisum_deals.sql file to create a local hive table(run as hadmin).
+
+  ```
+  hive -f /home/hadmin/kmeans_example/create_watson_bisum_deals.sql
+  ```
+
+
+  B. Import the sample data file into the table.  Use the load_data.sql file.
+
+  ```
+  hive -f /home/hadmin/kmeans_example/load_data.sql
+  ```
+
+  C. Check Hive to sure everything looks good.
+
+  Is the Table there?
+  ```
+  hive -e 'SHOW TABLES'
+  ```
+
+  Check data:
+  ```
+  hive -e 'select * from watson_bisum_deals limit 5' 
+  ```
+
+
+
+
+###Running Spark
+
+
+1. Log into the VM
+
+  ```
+  ssh hadmin@hadoop-manager
+  ```
+
+
+
+2. Use the spark-submit utility to run the app(always run as hadmin user).
+
+  ```
+  spark-submit {path to file}/kmeans.py
+  ```
+
+####Notes about the Running of the Spark App
+  - Currently the app uses two centers in order the cluster the data points. The purchases are filtered by the 'Beauty/Health' category so results find the center lat/long based on 'Beauty/Health' purchases
+  - Data for the input are pulled from your local hive table 'watson_bisum_deals'
+  - The results are the Lat/Long of two centers where the data points are clustered
+  - The results are written to HDFS temporarily(tab delimited file) in the /tmp/{output_dir}/{unix_timestamp}.  The {output_dir} is set by the user while the {unix_timestamp} is a dynamic directory in order to avoid errors.  **Note: the {output_dir} must exist prior to running to avoid errors.
+  - The results are finally loaded into Hive.  The table name is set by the user {hive_table}
+
+
+
+
+
+
+###Using Pyspark Repl
+
+The code contained with the 'kmeans.py' file can also be executed use the pyspark repl.  This utility acts just like a python repl, and is good just to test and experiment
+
+Start the repl:
+
 ```
-git clone https://github.com/dusts66/Spark_Examples.git
-```
-
-
-####2. Install Virtual Box (Pick your OS)
-	
-http://www.oracle.com/technetwork/server-storage/virtualbox/downloads/index.html
-
-
-
-####3. Install Docker - installs the software to run a VM
-	
-https://docs.docker.com/installation/
-
-If using Windows or Mac OSx the instructions will ask you to install
-boot2docker which runs a VM with the docker daemon.
-
-
-
-####4. Pull down the docker container for Spark
-
-```
-docker pull ddavidson/spark
-```
-
-This will download the container we will use.  It will have Spark and Hadoop installed.
-
-```
-docker build --rm -t ddavidson/spark .
-```
-
-This will build the container.
-
-
-####5. Run boot2docker
-
-You can run boot2docker either by:
-
-A. Execute the program so for Mac users click on the icon in Applications or for Window Users find the shortcut in Programs.
-	
-B. Execute via Mac Terminal CLI.
-
-```
-$ boot2docker init
-$ boot2docker start
-```
-
-This will start up the VM.  If you see instructions like this:
-
-```
-To connect the Docker client to the Docker daemon, please set:
-    export DOCKER_CERT_PATH=/Users/dustindavidson/.boot2docker/certs/boot2docker-vm
-    export DOCKER_TLS_VERIFY=1
-    export DOCKER_HOST=tcp://192.168.59.103:2376
-```
-Execute the commands so the proper environmental variables are set.
-
-See documentation for additional questions 
-Mac - https://docs.docker.com/installation/mac/
-Windows - https://docs.docker.com/installation/windows/ 
-
-
-####6. Run the Spark docker container
-
-```
-docker run -i -P -t -v <path to Spark_Examples repo>:/home/spark  -h sandbox ddavidson/spark /etc/bootstrap.sh -bash
-```
-	
-This will startup the Spark container and log you into a shell.  The command also mounts your local Spark_Example repo onto the docker container.  This allows you to modify files and code within your local repo and the Spark container will mirror the updates to '/home/spark/' directory.
-
-You can run these examples by using the "spark-submit".  You will need to dump the example data into HDFS and indicate the path in the CLI.  
-
-```
- spark-submit <python file> <HDFS data file>
+pyspark
 ```

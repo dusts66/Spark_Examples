@@ -1,0 +1,52 @@
+CREATE  TABLE `purchases`(
+  `purchase_id` int,
+  `purchase_time` string,
+  `purchase_day` string,
+  `purchase_month` string,
+  `charged_at` string,
+  `person_id` int,
+  `deal_id` int,
+  `purchase_ref` string,
+  `city_id` int,
+  `aasm_state` string,
+  `referring_purchase_id` int,
+  `referring_user_id` int,
+  `purchase_country_id` int,
+  `deal_country_id` int,
+  `deal_country_name` string,
+  `deal_country_currency_code` string,
+  `latitude` float,
+  `longitude` float,
+  `discount` float,
+  `deal_type` string,
+  `promo_code` string,
+  `promo_code_discount` double,
+  `csr_purchaser_id` int,
+  `referring_click_deal_id` int,
+  `referring_click_item_type` string,
+  `referring_click_delivery_id` int,
+  `redeemed_count` int,
+  `charge_failed` int,
+  `coupons` int,
+  `gift_coupons` int,
+  `revenue_at_offer_end` double,
+  `net_revenue_at_offer_end` double,
+  `gross_refunds_pre_merchant_payout` double,
+  `net_refunds_pre_merchant_payout` double,
+  `gross_refunds_post_merchant_payout` double,
+  `revenue_at_offer_end_usd` double,
+  `net_revenue_at_offer_end_usd` double,
+  `gross_refunds_pre_merchant_payout_usd` double,
+  `net_refunds_pre_merchant_payout_usd` double,
+  `gross_refunds_post_merchant_payout_usd` double,
+  `ref_city_id` int,
+  `ref_offer_starts_at` string,
+  `indirect_purchase` int,
+  `direct_with_indirect_purchase` int)
+ROW FORMAT DELIMITED
+  FIELDS TERMINATED BY '\u0001'
+  LINES TERMINATED BY '\n'
+STORED AS INPUTFORMAT
+  'com.hadoop.mapred.DeprecatedLzoTextInputFormat'
+OUTPUTFORMAT
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'

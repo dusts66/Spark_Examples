@@ -1,0 +1,1 @@
+LOAD DATA LOCAL INPATH 'purchase_sample.lzo' INTO TABLE purchases
